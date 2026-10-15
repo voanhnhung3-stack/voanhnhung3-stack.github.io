@@ -166,3 +166,258 @@ layout: default
     }
 </style>
 {% endif %}
+
+{% raw %}
+
+<!-- 文章目录：自动读取正文的 h2 / h3 / h4 生成，带锚点跳转与滚动高亮。
+     宽屏(>=1400px)固定在正文右侧；窄屏折叠显示在正文顶部。
+     想改显示宽度阈值 → 搜 1400px；想改目录标题文案 → 搜 Contents。 -->
+<style>
+    /* ---------- 目录：公共样式 ---------- */
+    .post-toc { display: none; }
+    body.toc-ready .post-toc { display: block; }
+
+    .post-toc .toc-caption {
+        font-size: 13px;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        color: #a0a0a0;
+        margin-bottom: 8px;
+        -webkit-user-select: none;
+        user-select: none;
+    }
+    .post-toc .toc-list {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        border-left: 1px solid #ebebeb;
+        font-size: 13px;
+        line-height: 1.65;
+    }
+    .post-toc .toc-list li { margin: 0; }
+    .post-toc .toc-list a {
+        position: relative;
+        display: block;
+        padding: 3px 0 3px 13px;
+        color: #8a8a8a;
+        text-decoration: none;
+        word-break: break-word;
+        transition: color .15s ease;
+    }
+    .post-toc .toc-list a:hover { color: #0085a1; }
+    .post-toc .toc-list a.active { color: #0085a1; font-weight: 600; }
+    .post-toc .toc-list a.active::before {
+        content: '';
+        position: absolute;
+        left: -1px;
+        top: 5px;
+        bottom: 5px;
+        width: 2px;
+        background-color: #0085a1;
+    }
+    .post-toc .toc-list li.toc-h3 a { padding-left: 27px; font-size: 12.5px; }
+    .post-toc .toc-list li.toc-h4 a { padding-left: 41px; font-size: 12px; color: #a5a5a5; }
+
+    /* ---------- 窄屏：正文顶部的折叠卡片 ---------- */
+    @media all and (max-width: 1399px) {
+        .post-toc.toc-side { display: none !important; }
+        .post-toc.toc-inline {
+            margin: 0 0 34px;
+            padding: 14px 18px 12px;
+            background-color: #f8f8f8;
+            border: 1px solid #eeeeee;
+            border-radius: 4px;
+        }
+        .post-toc.toc-inline .toc-caption { cursor: pointer; }
+        .post-toc.toc-inline .toc-caption::after {
+            content: '收起';
+            float: right;
+            font-size: 12px;
+            color: #bbbbbb;
+            text-transform: none;
+        }
+        .post-toc.toc-inline.collapsed .toc-list { display: none; }
+        .post-toc.toc-inline.collapsed .toc-caption::after { content: '展开'; }
+    }
+
+    /* ---------- 宽屏：右侧固定目录 ---------- */
+    @media all and (min-width: 1400px) {
+        .post-toc.toc-inline { display: none !important; }
+        .post-toc.toc-side {
+            position: fixed;
+            top: 96px;
+            left: 50%;
+            margin-left: 404px;
+            width: calc(50vw - 560px);
+            min-width: 130px;
+            max-width: 260px;
+            max-height: calc(100vh - 150px);
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding: 12px 14px;
+            background-color: rgba(255, 255, 255, .92);
+            border-radius: 6px;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity .25s ease;
+        }
+        .post-toc.toc-side.toc-show { opacity: 1; visibility: visible; }
+    }
+
+    /* 点目录跳转时，标题不要被顶部导航栏挡住 */
+    .post-container h2,
+    .post-container h3,
+    .post-container h4 { scroll-margin-top: 70px; }
+</style>
+
+<script>
+(function () {
+    'use strict';
+
+    var content = document.querySelector('.post-container');
+    if (!content) return;
+
+    /* 1) 收集正文里的标题 */
+    var heads = [];
+    var nodes = content.querySelectorAll('h2, h3, h4');
+    for (var i = 0; i < nodes.length; i++) {
+        var h = nodes[i];
+        if (h.closest && h.closest('.post-toc')) continue;
+        if (!h.id) h.id = 'heading-' + (i + 1);
+        heads.push(h);
+    }
+    if (heads.length < 2) return;   /* 标题太少就不显示目录 */
+
+    /* 2) 生成一份目录列表 */
+    function buildList() {
+        var ul = document.createElement('ul');
+        ul.className = 'toc-list';
+        for (var n = 0; n < heads.length; n++) {
+            var head = heads[n];
+
+            /* 复制标题文字，并去掉 anchorjs 注入的 # 号 */
+            var clone = head.cloneNode(true);
+            var marks = clone.querySelectorAll('.anchorjs-link');
+            for (var m = 0; m < marks.length; m++) {
+                marks[m].parentNode.removeChild(marks[m]);
+            }
+            var text = (clone.textContent || '').replace(/\s+/g, ' ').trim();
+            if (!text) text = '第 ' + (n + 1) + ' 节';
+
+            var li = document.createElement('li');
+            li.className = 'toc-' + head.tagName.toLowerCase();
+
+            var a = document.createElement('a');
+            a.href = '#' + encodeURIComponent(head.id);
+            a.setAttribute('data-target', head.id);
+            a.textContent = text;
+            a.title = text;
+
+            li.appendChild(a);
+            ul.appendChild(li);
+        }
+        return ul;
+    }
+
+    /* 3) 宽屏版：固定在正文右侧 */
+    var side = document.createElement('nav');
+    side.className = 'post-toc toc-side';
+    var sideCap = document.createElement('div');
+    sideCap.className = 'toc-caption';
+    sideCap.textContent = 'Contents';
+    side.appendChild(sideCap);
+    side.appendChild(buildList());
+    document.body.appendChild(side);
+
+    /* 4) 窄屏版：插在正文最前面 */
+    var inline = document.createElement('div');
+    inline.className = 'post-toc toc-inline';
+    var inlineCap = document.createElement('div');
+    inlineCap.className = 'toc-caption';
+    inlineCap.textContent = '目录';
+    inline.appendChild(inlineCap);
+    inline.appendChild(buildList());
+    content.insertBefore(inline, content.firstChild);
+
+    document.body.classList.add('toc-ready');
+
+    /* 窄屏下点标题收起 / 展开 */
+    inlineCap.addEventListener('click', function () {
+        inline.classList.toggle('collapsed');
+    });
+
+    /* 5) 交互逻辑 */
+    var links = document.querySelectorAll('.post-toc .toc-list a');
+    var navbar = document.querySelector('.navbar-custom');
+    var header = document.querySelector('.intro-header');
+
+    function navGap() {
+        return (navbar ? navbar.offsetHeight : 56) + 10;
+    }
+
+    function jump(id) {
+        var el = document.getElementById(id);
+        if (!el) return;
+        var y = el.getBoundingClientRect().top + window.pageYOffset - navGap();
+        window.scrollTo({ top: y < 0 ? 0 : y, behavior: 'smooth' });
+    }
+
+    for (var p = 0; p < links.length; p++) {
+        links[p].addEventListener('click', function (e) {
+            e.preventDefault();
+            var id = this.getAttribute('data-target');
+            jump(id);
+            if (window.history.replaceState) {
+                window.history.replaceState(null, '', '#' + encodeURIComponent(id));
+            }
+        });
+    }
+
+    /* 6) 滚动时：淡入右侧目录 + 高亮当前章节 */
+    var ticking = false;
+
+    function onScroll() {
+        var top = window.pageYOffset;
+
+        var trigger = header ? header.offsetHeight * 0.7 : 360;
+        if (top > trigger) {
+            side.classList.add('toc-show');
+        } else {
+            side.classList.remove('toc-show');
+        }
+
+        var line = top + (navbar ? navbar.offsetHeight : 56) + 24;
+        var current = heads[0].id;
+        for (var q = 0; q < heads.length; q++) {
+            if (heads[q].getBoundingClientRect().top + top <= line) {
+                current = heads[q].id;
+            }
+        }
+        for (var r = 0; r < links.length; r++) {
+            links[r].classList.toggle(
+                'active',
+                links[r].getAttribute('data-target') === current
+            );
+        }
+        ticking = false;
+    }
+
+    window.addEventListener('scroll', function () {
+        if (!ticking) {
+            ticking = true;
+            window.requestAnimationFrame(onScroll);
+        }
+    }, { passive: true });
+
+    window.addEventListener('resize', onScroll);
+    onScroll();
+
+    /* 7) 带 #锚点 直接进来时，修正被导航栏遮住的位置 */
+    if (window.location.hash) {
+        setTimeout(function () {
+            jump(decodeURIComponent(window.location.hash.slice(1)));
+        }, 300);
+    }
+})();
+</script>
+{% endraw %}

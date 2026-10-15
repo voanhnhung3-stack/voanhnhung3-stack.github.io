@@ -6,7 +6,7 @@ SEOTitle: EliWung的博客 | EliWung Blog
 header-img: img/home-bg.jpg
 email: eliwung@example.com
 description: "这里是 @EliWung 的个人博客，与你一起发现更大的世界"
-keyword: "EliWung, 博客, 个人网站, 互联网, 编程"
+keyword: "EliWung, 博客, 个人网站"
 url: "https://voanhnhung3-stack.github.io"   # 你的主页地址，用于生成绝对链接
 baseurl: ""                                  # 用户主页仓库 (voanhnhung3-stack.github.io) 必须留空
                                              # 如果是项目仓库则写成 "/仓库名"
@@ -86,7 +86,7 @@ busuanzi: true
 #  Sidebar settings —— 侧边栏
 # =========================================================
 sidebar: true
-sidebar-about-description: "写代码，做产品，记录成长。世界那么大，多走走看看。"
+sidebar-about-description: "Will Xeriscape"
 sidebar-avatar: /img/avatar-eliwung.svg    # 头像，换成你自己的照片即可（如 /img/avatar-eliwung.jpg）
 
 

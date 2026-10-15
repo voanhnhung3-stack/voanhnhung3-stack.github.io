@@ -87,7 +87,7 @@ busuanzi: true
 # =========================================================
 sidebar: true
 sidebar-about-description: "Will Xeriscape"
-sidebar-avatar: /img/a933c4b4d8c2cdc1ad7766082edf8606.jpg    # 头像，换成你自己的照片即可（如 /img/avatar-eliwung.jpg）
+sidebar-avatar: /img/a933c4b4d8c2cdc1ad7766082edf8606.jpg   # 头像，换成你自己的照片即可（如 /img/avatar-eliwung.jpg）
 
 
 # =========================================================

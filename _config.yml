@@ -1,0 +1,107 @@
+# =========================================================
+#  Site settings —— 站点基础设置
+# =========================================================
+title: EliWung Blog
+SEOTitle: EliWung的博客 | EliWung Blog
+header-img: img/home-bg.jpg
+email: eliwung@example.com
+description: "这里是 @EliWung 的个人博客，与你一起发现更大的世界"
+keyword: "EliWung, 博客, 个人网站, 互联网, 编程"
+url: "https://voanhnhung3-stack.github.io"   # 你的主页地址，用于生成绝对链接
+baseurl: ""                                  # 用户主页仓库 (voanhnhung3-stack.github.io) 必须留空
+                                             # 如果是项目仓库则写成 "/仓库名"
+
+
+# =========================================================
+#  SNS settings —— 社交账号（没有的就在前面加 # 注释掉）
+# =========================================================
+RSS: false
+github_username:    voanhnhung3-stack
+# weibo_username:    your_weibo
+# zhihu_username:    your_zhihu
+# twitter_username:  your_twitter
+# facebook_username: your_facebook
+
+
+# =========================================================
+#  Build settings —— 构建设置
+# =========================================================
+highlighter: rouge
+permalink: pretty
+paginate: 10
+anchorjs: true
+
+# 这些文件不会被发布到网站上
+exclude:
+  - less
+  - node_modules
+  - vendor
+  - tools
+  - Gruntfile.js
+  - package.json
+  - Gemfile
+  - Gemfile.lock
+  - README.md
+  - README.zh.md
+  - LICENSE
+
+
+# =========================================================
+#  Gems —— 插件
+# =========================================================
+plugins:
+  - jekyll-paginate
+
+
+# =========================================================
+#  Markdown settings —— Markdown 解析设置
+# =========================================================
+markdown: kramdown
+kramdown:
+  input: GFM                              # 使用 GitHub 风格 Markdown
+
+
+# =========================================================
+#  Comment settings —— 评论系统（按需开启其一）
+# =========================================================
+# disqus_username: your_disqus_shortname
+# duoshuo_username: your_duoshuo_username
+# duoshuo_share: true
+
+
+# =========================================================
+#  Analytics settings —— 统计（填自己的 ID 才会生效）
+# =========================================================
+# Baidu Analytics
+# ba_track_id: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+# Google Analytics
+# ga_track_id: 'UA-xxxxxxx-x'
+# ga_domain: voanhnhung3-stack.github.io
+
+# 不蒜子访问统计（无需注册，留 true 即可显示访问量）
+busuanzi: true
+
+
+# =========================================================
+#  Sidebar settings —— 侧边栏
+# =========================================================
+sidebar: true
+sidebar-about-description: "写代码，做产品，记录成长。世界那么大，多走走看看。"
+sidebar-avatar: /img/avatar-eliwung.svg    # 头像，换成你自己的照片即可（如 /img/avatar-eliwung.jpg）
+
+
+# =========================================================
+#  Featured Tags —— 侧边栏特色标签
+# =========================================================
+featured-tags: true
+featured-condition-size: 1                 # 标签下文章数 > 该值时才会出现在侧边栏
+
+
+# =========================================================
+#  Friends —— 友情链接
+# =========================================================
+friends:
+  - title: "Hux Blog"
+    href: "https://huxpro.github.io"
+  - title: "GitHub"
+    href: "https://github.com/voanhnhung3-stack"

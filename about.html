@@ -1,0 +1,129 @@
+---
+layout: page
+title: "About"
+description: "Hey, this is EliWung."
+header-img: "img/about-bg.jpg"
+---
+
+<!-- Language Selector -->
+<select onchange="onLanChange(this.options[this.options.selectedIndex].value)">
+    <option value="0" selected> 中文 Chinese </option>
+    <option value="1"> 英语 English </option>
+</select>
+
+<!-- Chinese Version -->
+<div class="zh post-container">
+    <blockquote>
+        写代码，做产品，记录成长。<br>
+        世界那么大，多走走看看。
+    </blockquote>
+
+    你好，我是 <strong>EliWung</strong> 👋
+
+    <p>
+        这里是我的个人博客，用来存放一些想法、笔记和踩过的坑。
+        相比发在社交平台上，我更希望有一个完全属于自己的地方，把零散的知识整理成体系，
+        也顺便记录一下自己是怎么一点点长大的。
+    </p>
+
+    <p>
+        我平时关注的东西比较杂：写代码、做点小产品、看看别人的设计，偶尔也会研究一些和主业无关的玩意儿。
+        这个站点基于 Jekyll 和 Hux Blog 主题搭建，托管在 GitHub Pages 上，
+        全部代码开源在我的 GitHub 主页 —— 如果你也想要一个，直接 fork 走改改就行。
+    </p>
+
+    <h3>关于这个博客</h3>
+    <ul>
+        <li><strong>写作</strong>：用 Markdown，提交即发布，不需要任何后台。</li>
+        <li><strong>内容</strong>：技术笔记为主，偶尔夹带一些生活流水账。</li>
+        <li><strong>态度</strong>：尽量写自己真正想清楚的东西，不凑字数。</li>
+    </ul>
+
+    <h3>联系我</h3>
+    <p>
+        欢迎通过下面的社交图标找到我，或者直接在 GitHub 上提 Issue。
+        如果你觉得某篇文章对你有帮助，点个 Star 我会很开心。
+    </p>
+
+    <p style="text-align:right;">
+        —— EliWung
+    </p>
+</div>
+
+<!-- English Version -->
+<div class="en post-container">
+    <blockquote>
+        Write code, build products, keep growing.
+    </blockquote>
+
+    <p>Hi, I'm <strong>EliWung</strong> 👋</p>
+
+    <p>
+        This is my personal blog — a place for thoughts, notes, and lessons learned the hard way.
+        Rather than scattering everything across social platforms, I'd rather own a corner of the
+        internet where I can turn loose fragments into something structured, and keep a record of
+        how I grow along the way.
+    </p>
+
+    <p>
+        My interests are a bit of a mix: coding, building small products, looking at good design,
+        and occasionally diving into things that have nothing to do with my day job. This site is
+        built with Jekyll and the Hux Blog theme, hosted on GitHub Pages. All the code is open on
+        my GitHub — feel free to fork it and make it yours.
+    </p>
+
+    <p style="text-align:right;">
+        -- EliWung
+    </p>
+</div>
+
+<!-- Handle Language Change -->
+<script type="text/javascript">
+    var $zh = document.querySelector(".zh");
+    var $en = document.querySelector(".en");
+    function onLanChange(index){
+        if(index == 0){
+            $zh.style.display = "block";
+            $en.style.display = "none";
+        }else{
+            $en.style.display = "block";
+            $zh.style.display = "none";
+        }
+    }
+    onLanChange(0);
+</script>
+
+
+{% if site.duoshuo_username %}
+<!-- 多说评论框 start -->
+<div class="comment">
+    <div class="ds-thread"
+        data-thread-key="{{site.duoshuo_username}}/about"
+        data-title="{{page.title}}"
+        data-url="{{site.url}}/about/"></div>
+</div>
+<!-- 多说评论框 end -->
+{% endif %}
+
+
+{% if site.disqus_username %}
+<!-- disqus 评论框 start -->
+<div class="comment">
+    <div id="disqus_thread" class="disqus-thread"></div>
+</div>
+<!-- disqus 评论框 end -->
+
+<!-- disqus 公共JS代码 start -->
+<script type="text/javascript">
+    var disqus_shortname = "{{site.disqus_username}}";
+    var disqus_identifier = "{{site.disqus_username}}/{{page.url}}";
+    var disqus_url = "{{site.url}}{{page.url}}";
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<!-- disqus 公共JS代码 end -->
+{% endif %}
